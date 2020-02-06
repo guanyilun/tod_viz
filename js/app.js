@@ -5,7 +5,7 @@ var vm = new Vue({
         option: {
             // cannot omit the axis definition here
             grid: [{
-                top: 10,
+                top: 50,
                 height: 400,
                 left: 10,
                 width: 400,
@@ -53,7 +53,7 @@ var vm = new Vue({
             parallelAxis: [
                 {dim: 5, name: 'MFE'},
                 {dim: 6, name: 'skew'},
-                {dim: 7, name: 'corr'},
+                {dim: 7, name: 'corr', min: 0.9, max: 1},
                 {dim: 8, name: 'rms'},
                 {dim: 9, name: 'gain'},
                 {dim: 10, name: 'DE'},
@@ -61,7 +61,7 @@ var vm = new Vue({
                 {dim: 12, name: 'norm'}
             ],
             parallel: {
-                top: 10,
+                top: 50,
                 height: 400,
                 left: 500,
                 width: 800,
