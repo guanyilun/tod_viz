@@ -2,10 +2,11 @@ var vm = new Vue({
 	el: '#app',
 	data: {
         chart: {},
+        fields: [],
         option: {
             title: {
-                'text': 'TOD visualizer',
-                'subtext': 'array: pa4\nfreq: 150GHz'
+                text: 'TOD Visualizer',
+                subtext: '',
             },
             grid: [
                 // array x, y scatter plot
@@ -17,9 +18,9 @@ var vm = new Vue({
                 // scatter plot
                 {top: 50, height: 400, left: 950, width: 400},
                 // scatter plot
-                {top: 50, height: 400, left: 1450, width: 400},
+                {top: 50, height: 400, left: 1400, width: 400},
                 // scatter plot
-                {top: 500, height: 400, left: 1450, width: 400},
+                {top: 500, height: 400, left: 1400, width: 400},
             ],
             // pathological parameter parallel axis plot
             parallel: {top: 500, height: 400, left: 500, width: 850},
@@ -29,7 +30,7 @@ var vm = new Vue({
                 {show: false, gridIndex: 0},
                 {show: false, gridIndex: 1, name: 'row'},
                 {show: true, gridIndex: 2, name: 'rms', min: 0, max: 6},
-                {show: true, gridIndex: 3, name: 'norm'},
+                {show: true, gridIndex: 3, name: 'rms', min: 0, max: 6},
                 {show: true, gridIndex: 4, name: 'skew', min:-4, max:4},
                 {show: true, gridIndex: 5, name: 'corr', min:0.95, max:1},
             ],
@@ -37,7 +38,7 @@ var vm = new Vue({
                 {show: false, gridIndex: 0},
                 {show: false, gridIndex: 1, name: 'col'},
                 {show: true, gridIndex: 2, name: 'gain'},
-                {show: true, gridIndex: 3, name: 'gain'},
+                {show: true, gridIndex: 3, name: 'ff'},
                 {show: true, gridIndex: 4, name: 'MFE', min:2, max:20},
                 {show: true, gridIndex: 5, name: 'gain'},
             ],
@@ -57,8 +58,8 @@ var vm = new Vue({
             visualMap: {
                 type: 'continuous',
                 left: 'right',
-                min: 0.6,
-                max: 1.6,
+                min: 0.3,
+                max: 2.0,
                 inRange: {
                     color: ['#313695', '#4575b4', '#74add1', '#abd9e9', '#e0f3f8', '#ffffbf', '#fee090', '#fdae61', '#f46d43', '#d73027', '#a50026']
                 },
@@ -103,8 +104,8 @@ var vm = new Vue({
                 {
                     type: 'scatter',
                     encode: {
-                        x: 'normLive',
-                        y: 'gainLive'
+                        x: 'rmsLive',
+                        y: 'ff'
                     },
                     symbolSize: 5,
                     xAxisIndex: 3,
@@ -141,7 +142,10 @@ var vm = new Vue({
                 {dim: 8, name: 'rms', realtime: false, min: 0.1, max: 6},
                 {dim: 9, name: 'gain', realtime: false},
                 {dim: 10, name: 'DE', realtime: false, min: 0.1, max:1000,},
-                {dim: 12, name: 'norm', realtime: false}
+                {dim: 11, name: 'norm', realtime: false},
+                {dim: 12, name: 'kurt', realtime: false, min:-10, max:10},
+                {dim: 13, name: 'ff', realtime: false},
+                {dim: 15, name: 'presel', realtime: false, type: 'category', data: [0, 1]}
             ],
         }
     },
@@ -149,11 +153,21 @@ var vm = new Vue({
         bl() {},
     },
     mounted() {
-        // 基于准备好的dom，初始化echarts实例
+        // setup material form js
+        $(document).ready(function(){
+            $('select').formSelect();
+        });
+
+        // initialize echarts
         this.chart = echarts.init(document.getElementById('main'));
+        this.chart.showLoading()
         var self = this
         $.get("data/array.json", (json) => {
+            self.chart.hideLoading()
             self.option.dataset = json;
+            self.option.title.subtext = "Tag: " + json.tag;
+            self.fields = json.dimensions;
+            console.log(self.fields);
             self.chart.setOption(self.option);
         })
     }
