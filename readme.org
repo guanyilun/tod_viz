@@ -1,2 +1,6 @@
 * TOD Visualizer
-This is a proof-of-concept tool to study the pathology of each TOD. 
+This is a proof-of-concept tool to study the pathology of each TOD. It allows one to interact with the plot and explore the whereabouts of statistical anomalies in each TOD. 
+
+Screenshot:
+
+[[https://raw.githubusercontent.com/guanyilun/tod_viz/master/assets/screenshot.png?token=AAH5PFAVXZFLKDV5Z4EA7BK6HT3GA]]
