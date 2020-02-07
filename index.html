@@ -7,13 +7,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <script src="js/jquery.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <!-- Compiled and minified JavaScript -->
 	<!-- echarts.js -->
 	<script src="js/echarts.min.js"></script>
   </head>
   <body style="margin: 0px;">
-	<div id="app" style="width: 100%;height:100%;">
+	<div id="app" style="width: 1900px;height:950px;">
 	  <div id="main" style="width:100%;height:100%;"></div>
       <div class="row">
         <div class="input-field col s2">
@@ -25,21 +25,21 @@
           </select>
         </div>
         <div class="input-field col s2">
-          <select>
-            <option value="" disabled selected>Color:</option>
+          <select v-model="vmap">
+            <option value="" disabled selected>vmap:</option>
             <option v-for="key in fields">{{key}}</option>
           </select>
         </div>
         <div class="input-field col s2">
-          <input id="last_name" type="text" class="validate">
+          <input id="last_name" type="text" class="validate" v-model="vmin">
           <label for="last_name">vmin: </label>
         </div>
         <div class="input-field col s2">
-          <input id="last_name" type="text" class="validate">
+          <input id="last_name" type="text" class="validate" v-model="vmax">
           <label for="last_name">vmax: </label>
         </div>
         <div class="input-field col s2">
-          <a class="waves-effect waves-teal btn-flat">Refresh</a>
+          <a class="waves-effect waves-teal btn-flat" v-on:click="updateVmap">Refresh</a>
         </div>
       </div>
     </div>

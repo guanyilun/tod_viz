@@ -2,7 +2,12 @@ var vm = new Vue({
 	el: '#app',
 	data: {
         chart: {},
-        fields: [],
+        fields: ["det_uid", "array_x", "array_y", "row", "col", "MFELive",
+                 "skewLive", "corrLive", "rmsLive", "gainLive", "DELive",
+                 "normLive", "kurtLive", "ff", "resp", "presel"],
+        vmap: "gainLive",
+        vmin: null,
+        vmax: null,
         option: {
             title: {
                 text: 'TOD Visualizer',
@@ -145,18 +150,28 @@ var vm = new Vue({
                 {dim: 11, name: 'norm', realtime: false},
                 {dim: 12, name: 'kurt', realtime: false, min:-10, max:10},
                 {dim: 13, name: 'ff', realtime: false},
+                {dim: 14, name: 'resp', realtime: false, min: 1.3e-16, max: 1.8e-16},
                 {dim: 15, name: 'presel', realtime: false, type: 'category', data: [0, 1]}
             ],
         }
     },
     methods: {
-        bl() {},
+        updateVmap () {
+            let option = {
+                visualMap: {
+                    text: ["placeholder"]
+                }
+            }
+            option.visualMap.dimension = this.vmap;
+            option.visualMap.text = this.vmap;
+            option.visualMap.min = parseFloat(this.vmin);
+            option.visualMap.max = parseFloat(this.vmax);
+            this.chart.setOption(option);
+        }
     },
     mounted() {
-        // setup material form js
-        $(document).ready(function(){
-            $('select').formSelect();
-        });
+        // initialize materialcss
+        $('select').formSelect();
 
         // initialize echarts
         this.chart = echarts.init(document.getElementById('main'));
@@ -167,7 +182,7 @@ var vm = new Vue({
             self.option.dataset = json;
             self.option.title.subtext = "Tag: " + json.tag;
             self.fields = json.dimensions;
-            console.log(self.fields);
+            console.log(json.dimensions);
             self.chart.setOption(self.option);
         })
     }
