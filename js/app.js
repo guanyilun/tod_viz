@@ -1,7 +1,7 @@
 var vm = new Vue({
 	el: '#app',
+    chart: {},
 	data: {
-        chart: {},
         fields: ["det_uid", "array_x", "array_y", "row", "col", "MFELive",
                  "skewLive", "corrLive", "rmsLive", "gainLive", "DELive",
                  "normLive", "kurtLive", "ff", "resp", "presel"],
@@ -60,20 +60,45 @@ var vm = new Vue({
                     opacity: 1
                 }
             },
-            visualMap: {
-                type: 'continuous',
-                left: 'right',
-                min: 0.3,
-                max: 2.0,
-                inRange: {
-                    color: ['#313695', '#4575b4', '#74add1', '#abd9e9', '#e0f3f8', '#ffffbf', '#fee090', '#fdae61', '#f46d43', '#d73027', '#a50026']
+            visualMap: [
+                {
+                    type: 'piecewise',
+                    selectedMode: 'multiple',
+                    categories: ['A', 'B'],
+                    dimension: 'pol_family',
+                    left: 'right',
+                    label: true,
+                    bottom: 200,
+                    inRange: {
+                        opacity: {
+                            'A': 1,
+                            'B': 1,
+                        },
+                    },
+                    outOfRange: {
+                        opacity: {
+                            'A': 0,
+                            'B': 0,
+                        },
+                        color: '#ffffff',
+                    },
+                    //seriesIndex: [0,1],
                 },
-                text: ['gainLive'],           // 文本，默认为数值文本
-                calculable: true,
-                dimension: 'gainLive',
-                precision: 2,
-                realtime: false,
-            },
+                {
+                    type: 'continuous',
+                    left: 'right',
+                    min: 0.3,
+                    max: 2.0,
+                    inRange: {
+                        color: ['#313695', '#4575b4', '#74add1', '#abd9e9', '#e0f3f8', '#ffffbf', '#fee090', '#fdae61', '#f46d43', '#d73027', '#a50026']
+                    },
+                    text: ['gainLive'],           // 文本，默认为数值文本
+                    calculable: true,
+                    dimension: 'gainLive',
+                    precision: 2,
+                    realtime: false,
+                },
+            ],
             // define series
             series: [
                 {
@@ -151,21 +176,23 @@ var vm = new Vue({
                 {dim: 12, name: 'kurt', realtime: false, min:-10, max:10},
                 {dim: 13, name: 'ff', realtime: false},
                 {dim: 14, name: 'resp', realtime: false, min: 1.3e-16, max: 1.8e-16},
-                {dim: 15, name: 'presel', realtime: false, type: 'category', data: [0, 1]}
+                {dim: 15, name: 'presel', realtime: false, type: 'category', data: [0, 1]},
+                // {dim: 16, name: 'pol_family', realtime: false, type: 'category', data: ['A', 'B', 'X']}
             ],
         }
     },
     methods: {
         updateVmap () {
             let option = {
-                visualMap: {
+                // first element is to ensure the first visual map remains unchanged
+                visualMap: [{},{
                     text: ["placeholder"]
-                }
+                }]
             }
-            option.visualMap.dimension = this.vmap;
-            option.visualMap.text = this.vmap;
-            option.visualMap.min = parseFloat(this.vmin);
-            option.visualMap.max = parseFloat(this.vmax);
+            option.visualMap[1].dimension = this.vmap;
+            option.visualMap[1].text[0] = this.vmap;
+            option.visualMap[1].min = parseFloat(this.vmin);
+            option.visualMap[1].max = parseFloat(this.vmax);
             this.chart.setOption(option);
         }
     },
@@ -180,9 +207,8 @@ var vm = new Vue({
         $.get("data/array.json", (json) => {
             self.chart.hideLoading()
             self.option.dataset = json;
-            self.option.title.subtext = "Tag: " + json.tag;
+            self.option.title.subtext = "TOD: " + json.tod_name + "\nTag: " + json.tag;
             self.fields = json.dimensions;
-            console.log(json.dimensions);
             self.chart.setOption(self.option);
         })
     }
