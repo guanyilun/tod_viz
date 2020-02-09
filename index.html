@@ -24,10 +24,11 @@
           <a class="waves-effect waves-teal btn-flat" v-on:click="loadTOD">Load TOD</a>
         </div>
         <div class="input-field col s2">
-          <select v-model="vmap">
+          <select id="vmap" v-model="vmap">
             <option value="" disabled selected>vmap:</option>
             <option v-for="key in fields">{{key}}</option>
           </select>
+          <label for="vmap">vmap: </label>
         </div>
         <div class="input-field col s2">
           <input id="vmin" type="text" class="validate" v-model="vmin">

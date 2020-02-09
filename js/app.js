@@ -176,9 +176,8 @@ var vm = new Vue({
                 {dim: 11, name: 'norm', realtime: false},
                 {dim: 12, name: 'kurt', realtime: false, min:-10, max:10},
                 {dim: 13, name: 'ff', realtime: false},
-                {dim: 14, name: 'resp', realtime: false, min: 1.3e-16, max: 1.8e-16},
+                {dim: 14, name: 'resp', realtime: false, min: 1.3, max: 1.8},
                 {dim: 15, name: 'presel', realtime: false, type: 'category', data: [0, 1]},
-                // {dim: 16, name: 'pol_family', realtime: false, type: 'category', data: ['A', 'B', 'X']}
             ],
         }
     },
@@ -218,13 +217,5 @@ var vm = new Vue({
         // initialize echarts
         this.chart = echarts.init(document.getElementById('main'));
         this.chart.setOption(this.option);
-        //     var self = this
-        //     $.get("data/array.json", (json) => {
-        //         self.chart.hideLoading()
-        //         self.option.dataset = json;
-        //         self.option.title.subtext = "TOD: " + json.tod_name + "\nTag: " + json.tag;
-        //         self.fields = json.dimensions;
-        //         self.chart.setOption(self.option);
-        //     })
     }
 })
