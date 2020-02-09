@@ -50,7 +50,10 @@ var vm = new Vue({
             ],
             tooltip: {
                 formatter: (param) => {
-                    return "ID: " + param.data[0];
+                    return "ID: " + param.data[0] + "<br>"
+                        + "Row: " + param.data[3] + "<br>"
+                        + "Col: " + param.data[4] + "<br>"
+                        + "Bias-line: " + param.data[17] + "<br>"
                 }
             },
             brush: {
@@ -69,7 +72,7 @@ var vm = new Vue({
                     dimension: 'pol_family',
                     left: 'right',
                     label: true,
-                    bottom: 200,
+                    bottom: 250,
                     inRange: {
                         opacity: {
                             'A': 1,
@@ -88,6 +91,7 @@ var vm = new Vue({
                 {
                     type: 'continuous',
                     left: 'right',
+                    bottom: 50,
                     min: 0.3,
                     max: 2.0,
                     inRange: {
@@ -201,7 +205,7 @@ var vm = new Vue({
                 let option = {
                     dataset: json,
                     title: {
-                        subtext: "TOD: " + json.tod_name + "\nTag: " + json.tag,
+                        subtext: "TOD: " + self.todname + "\nTag: " + json.tag,
                     }
                 }
                 self.fields = json.dimensions;
