@@ -284,6 +284,11 @@ var vm = new Vue({
                 parallelAxis: parallelAxis
             };
             this.chart.setOption(option);
+            // update this.option to make sure other methods
+            // share the same options
+            this.option.xAxis = xAxis;
+            this.option.yAxis = yAxis;
+            this.option.parallelAxis = parallelAxis;
         },
         updatePlots () {
             let xAxis = [];
@@ -307,7 +312,7 @@ var vm = new Vue({
                 } else {
                     xAxis.push(a);
                 }
-            })
+            });
             // update y axis
             this.option.yAxis.forEach((a,i) => {
                 // metadata.plots has an offset of 2
@@ -326,7 +331,7 @@ var vm = new Vue({
                 } else {
                     yAxis.push(a);
                 }
-            })
+            });
             // update series
             this.option.series.forEach((s,i) => {
                 if (i >= 2 && s.type == 'scatter') {
@@ -343,13 +348,18 @@ var vm = new Vue({
                 } else {
                     series.push(s)
                 }
-            })
-             let option = {
-                 xAxis: xAxis,
-                 yAxis: yAxis,
-                 series: series,
+            });
+            let option = {
+                xAxis: xAxis,
+                yAxis: yAxis,
+                series: series,
              };
             this.chart.setOption(option);
+            // update this.option to make sure other methods
+            // share the same options
+            this.option.xAxis = xAxis;
+            this.option.yAxis = yAxis;
+            this.option.series = series;
         }
     },
     mounted() {
