@@ -2,9 +2,20 @@ var vm = new Vue({
 	el: '#app',
     chart: null,
 	data: {
-        fields: ["det_uid", "array_x", "array_y", "row", "col", "MFELive",
-                 "skewLive", "corrLive", "rmsLive", "gainLive", "DELive",
-                 "normLive", "kurtLive", "ff", "resp", "presel"],
+        metadata: {
+            fields: ["det_uid", "array_x", "array_y", "row", "col", "MFELive",
+                     "skewLive", "corrLive", "rmsLive", "gainLive", "DELive",
+                     "normLive", "kurtLive", "ff", "resp", "presel"],
+            ranges: {
+                MFE: {dim: 5, min: 2, max: 20},
+                skew: {dim: 6, min: -4, max: 4},
+                corr: {dim: 7, min: 0.95, max: 1},
+                rms: {dim: 8, min: 0, max: 6},
+                DE: {dim: 10, min: 0.1, max:1000},
+                kurt: {dim: 12, min: -10, max: 10},
+                resp: {dim: 14, min: 1.3, max: 1.8},
+            }
+        },
         vmap: "gainLive",
         vmin: 0.3,
         vmax: 2,
@@ -54,6 +65,7 @@ var vm = new Vue({
                         + "Row: " + param.data[3] + "<br>"
                         + "Col: " + param.data[4] + "<br>"
                         + "Bias-line: " + param.data[17] + "<br>"
+                        + "Optical-sign: " + param.data[18] + "<br>"
                 }
             },
             brush: {
@@ -212,6 +224,44 @@ var vm = new Vue({
                 self.chart.setOption(option);
                 self.chart.hideLoading()
             })
+        },
+        updateRanges () {
+            let xAxis = [];
+            let yAxis = [];
+            let parallelAxis = [];
+            this.option.parallelAxis.forEach((p,i) => {
+                if (p.name in this.metadata.ranges) {
+                    p.min = this.metadata.ranges[p.name].min;
+                    p.max = this.metadata.ranges[p.name].max;
+                    parallelAxis.push(p)
+                } else {
+                    parallelAxis.push(p)
+                }
+            })
+            this.option.xAxis.forEach((a,i) => {
+                if (a.name in this.metadata.ranges) {
+                    a.min = this.metadata.ranges[a.name].min;
+                    a.max = this.metadata.ranges[a.name].max
+                    xAxis.push(a);
+                } else {
+                    xAxis.push(a);
+                }
+            })
+            this.option.yAxis.forEach((a,i) => {
+                if (a.name in this.metadata.ranges) {
+                    a.min = this.metadata.ranges[a.name].min;
+                    a.max = this.metadata.ranges[a.name].max
+                    yAxis.push(a);
+                } else {
+                    yAxis.push(a);
+                }
+            })
+            let option = {
+                xAxis: xAxis,
+                yAxis: yAxis,
+                parallelAxis: parallelAxis
+            };
+            this.chart.setOption(option);
         }
     },
     mounted() {

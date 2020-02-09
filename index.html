@@ -26,7 +26,7 @@
         <div class="input-field col s2">
           <select id="vmap" v-model="vmap">
             <option value="" disabled selected>vmap:</option>
-            <option v-for="key in fields">{{key}}</option>
+            <option v-for="key in metadata.fields">{{key}}</option>
           </select>
           <label for="vmap">vmap: </label>
         </div>
@@ -40,6 +40,67 @@
         </div>
         <div class="input-field col s1">
           <a class="waves-effect waves-teal btn-flat" v-on:click="updateVmap">Update color</a>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s1">
+          <input id="MFE_vmin" type="text" class="validate" v-model="metadata.ranges.MFE.min">
+          <label for="MFE_vmin">MFE vmin: </label>
+        </div>
+        <div class="input-field col s1">
+          <input id="MFE_vmax" type="text" class="validate" v-model="metadata.ranges.MFE.max">
+          <label for="MFE_vmax">MFE vmax: </label>
+        </div>
+        <div class="input-field col s1">
+          <input id="skew_vmin" type="text" class="validate" v-model="metadata.ranges.skew.min">
+          <label for="skew_vmin">skew vmin: </label>
+        </div>
+        <div class="input-field col s1">
+          <input id="skew_vmax" type="text" class="validate" v-model="metadata.ranges.skew.max">
+          <label for="skew_vmax">skew vmax: </label>
+        </div>
+        <div class="input-field col s1">
+          <input id="corr_vmin" type="text" class="validate" v-model="metadata.ranges.corr.min">
+          <label for="corr_vmin">corr vmin: </label>
+        </div>
+        <div class="input-field col s1">
+          <input id="corr_vmax" type="text" class="validate" v-model="metadata.ranges.corr.max">
+          <label for="corr_vmax">corr vmax: </label>
+        </div>
+        <div class="input-field col s1">
+          <input id="rms_vmin" type="text" class="validate" v-model="metadata.ranges.rms.min">
+          <label for="rms_vmin">rms vmin: </label>
+        </div>
+        <div class="input-field col s1">
+          <input id="rms_vmax" type="text" class="validate" v-model="metadata.ranges.rms.max">
+          <label for="rms_vmax">rms vmax: </label>
+        </div>
+        <div class="input-field col s1">
+          <input id="DE_vmin" type="text" class="validate" v-model="metadata.ranges.DE.min">
+          <label for="DE_vmin">DE vmin: </label>
+        </div>
+        <div class="input-field col s1">
+          <input id="DE_vmax" type="text" class="validate" v-model="metadata.ranges.DE.max">
+          <label for="DE_vmax">DE vmax: </label>
+        </div>
+        <div class="input-field col s1">
+          <input id="kurt_vmin" type="text" class="validate" v-model="metadata.ranges.kurt.min">
+          <label for="kurt_vmin">kurt vmin: </label>
+        </div>
+        <div class="input-field col s1">
+          <input id="kurt_vmax" type="text" class="validate" v-model="metadata.ranges.kurt.max">
+          <label for="kurt_vmax">kurt vmax: </label>
+        </div>
+        <div class="input-field col s1">
+          <input id="resp_vmin" type="text" class="validate" v-model="metadata.ranges.resp.min">
+          <label for="resp_vmin">resp vmin: </label>
+        </div>
+        <div class="input-field col s1">
+          <input id="resp_vmax" type="text" class="validate" v-model="metadata.ranges.resp.max">
+          <label for="resp_vmax">resp vmax: </label>
+        </div>
+        <div class="input-field col s2">
+          <a class="waves-effect waves-teal btn-flat" v-on:click="updateRanges">Update ranges</a>
         </div>
       </div>
     </div>
