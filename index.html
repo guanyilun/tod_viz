@@ -17,12 +17,11 @@
 	  <div id="main" style="width:100%;height:100%;"></div>
       <div class="row">
         <div class="input-field col s2">
-          <select>
-            <option value="" disabled selected>TOD:</option>
-            <option value="1">Option 1</option>
-            <option value="2">Option 2</option>
-            <option value="3">Option 3</option>
-          </select>
+          <input id="todname" type="text" class="validate" v-model="todname">
+          <label for="todname">TOD: </label>
+        </div>
+        <div class="input-field col s1">
+          <a class="waves-effect waves-teal btn-flat" v-on:click="loadTOD">Load TOD</a>
         </div>
         <div class="input-field col s2">
           <select v-model="vmap">
@@ -31,15 +30,15 @@
           </select>
         </div>
         <div class="input-field col s2">
-          <input id="last_name" type="text" class="validate" v-model="vmin">
-          <label for="last_name">vmin: </label>
+          <input id="vmin" type="text" class="validate" v-model="vmin">
+          <label for="vmin">vmin: </label>
         </div>
         <div class="input-field col s2">
-          <input id="last_name" type="text" class="validate" v-model="vmax">
-          <label for="last_name">vmax: </label>
+          <input id="vmax" type="text" class="validate" v-model="vmax">
+          <label for="vmax">vmax: </label>
         </div>
-        <div class="input-field col s2">
-          <a class="waves-effect waves-teal btn-flat" v-on:click="updateVmap">Refresh</a>
+        <div class="input-field col s1">
+          <a class="waves-effect waves-teal btn-flat" v-on:click="updateVmap">Update color</a>
         </div>
       </div>
     </div>

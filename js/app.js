@@ -1,13 +1,14 @@
 var vm = new Vue({
 	el: '#app',
-    chart: {},
+    chart: null,
 	data: {
         fields: ["det_uid", "array_x", "array_y", "row", "col", "MFELive",
                  "skewLive", "corrLive", "rmsLive", "gainLive", "DELive",
                  "normLive", "kurtLive", "ff", "resp", "presel"],
         vmap: "gainLive",
-        vmin: null,
-        vmax: null,
+        vmin: 0.3,
+        vmax: 2,
+        todname: '',
         option: {
             title: {
                 text: 'TOD Visualizer',
@@ -186,14 +187,28 @@ var vm = new Vue({
             let option = {
                 // first element is to ensure the first visual map remains unchanged
                 visualMap: [{},{
-                    text: ["placeholder"]
+                    dimension: this.vmap,
+                    text: [this.vmap],
+                    min: parseFloat(this.vmin),
+                    max: parseFloat(this.vmax),
                 }]
             }
-            option.visualMap[1].dimension = this.vmap;
-            option.visualMap[1].text[0] = this.vmap;
-            option.visualMap[1].min = parseFloat(this.vmin);
-            option.visualMap[1].max = parseFloat(this.vmax);
             this.chart.setOption(option);
+        },
+        loadTOD () {
+            this.chart.showLoading()
+            let self = this
+            $.get("data/" + this.todname + ".json", (json) => {
+                let option = {
+                    dataset: json,
+                    title: {
+                        subtext: "TOD: " + json.tod_name + "\nTag: " + json.tag,
+                    }
+                }
+                self.fields = json.dimensions;
+                self.chart.setOption(option);
+                self.chart.hideLoading()
+            })
         }
     },
     mounted() {
@@ -202,14 +217,14 @@ var vm = new Vue({
 
         // initialize echarts
         this.chart = echarts.init(document.getElementById('main'));
-        this.chart.showLoading()
-        var self = this
-        $.get("data/array.json", (json) => {
-            self.chart.hideLoading()
-            self.option.dataset = json;
-            self.option.title.subtext = "TOD: " + json.tod_name + "\nTag: " + json.tag;
-            self.fields = json.dimensions;
-            self.chart.setOption(self.option);
-        })
+        this.chart.setOption(this.option);
+        //     var self = this
+        //     $.get("data/array.json", (json) => {
+        //         self.chart.hideLoading()
+        //         self.option.dataset = json;
+        //         self.option.title.subtext = "TOD: " + json.tod_name + "\nTag: " + json.tag;
+        //         self.fields = json.dimensions;
+        //         self.chart.setOption(self.option);
+        //     })
     }
 })
