@@ -3,9 +3,24 @@ var vm = new Vue({
     chart: null,
 	data: {
         metadata: {
+            // fields that can be used for visual mapping
             fields: ["det_uid", "array_x", "array_y", "row", "col", "MFELive",
                      "skewLive", "corrLive", "rmsLive", "gainLive", "DELive",
                      "normLive", "kurtLive", "ff", "resp", "presel"],
+            // shortter name for plot display and use as look up table
+            variables: {
+                MFE: 'MFELive',
+                skew: 'skewLive',
+                corr: 'corrLive',
+                rms: 'rmsLive',
+                gain: 'gainLive',
+                DE: 'DELive',
+                norm: 'normLive',
+                kurt: 'kurtLive',
+                ff: 'ff',
+                resp: 'resp'
+            },
+            // plot ranges definition
             ranges: {
                 MFE: {dim: 5, min: 2, max: 20},
                 skew: {dim: 6, min: -4, max: 4},
@@ -14,12 +29,19 @@ var vm = new Vue({
                 DE: {dim: 10, min: 0.1, max:1000},
                 kurt: {dim: 12, min: -10, max: 10},
                 resp: {dim: 14, min: 1.3, max: 1.8},
-            }
+            },
+            // plot axis definition
+            plots: [
+                {gridIndex: 2, x: 'rms', y: 'gain'},
+                {gridIndex: 3, x: 'rms', y: 'ff'},
+                {gridIndex: 4, x: 'skew', y: 'MFE'},
+                {gridIndex: 5, x: 'corr', y: 'gain'}
+            ],
         },
         vmap: "gainLive",
         vmin: 0.3,
         vmax: 2,
-        todname: '',
+        todname: '1503213945.1503413441.ar4',
         option: {
             title: {
                 text: 'TOD Visualizer',
@@ -261,6 +283,72 @@ var vm = new Vue({
                 yAxis: yAxis,
                 parallelAxis: parallelAxis
             };
+            this.chart.setOption(option);
+        },
+        updatePlots () {
+            let xAxis = [];
+            let yAxis = [];
+            let series = [];
+            // update x axis
+            this.option.xAxis.forEach((a,i) => {
+                // metadata.plots has an offset of 2
+                if (i >= 2) {
+                    let ax = {
+                        show: true,
+                        gridIndex: i,
+                        name: this.metadata.plots[i-2].x
+                    };
+                    // add bounds if it is specified
+                    if (ax.name in this.metadata.ranges) {
+                        ax.min = this.metadata.ranges[ax.name].min;
+                        ax.max = this.metadata.ranges[ax.name].max;
+                    }
+                    xAxis.push(ax)
+                } else {
+                    xAxis.push(a);
+                }
+            })
+            // update y axis
+            this.option.yAxis.forEach((a,i) => {
+                // metadata.plots has an offset of 2
+                if (i >= 2) {
+                    let ax = {
+                        show: true,
+                        gridIndex: i,
+                        name: this.metadata.plots[i-2].y
+                    };
+                    // add bounds if it is specified
+                    if (ax.name in this.metadata.ranges) {
+                        ax.min = this.metadata.ranges[ax.name].min;
+                        ax.max = this.metadata.ranges[ax.name].max;
+                    }
+                    yAxis.push(ax)
+                } else {
+                    yAxis.push(a);
+                }
+            })
+            // update series
+            this.option.series.forEach((s,i) => {
+                if (i >= 2 && s.type == 'scatter') {
+                    series.push({
+                        type: 'scatter',
+                        encode: {
+                            x: this.metadata.variables[this.metadata.plots[i-2].x],
+                            y: this.metadata.variables[this.metadata.plots[i-2].y],
+                        },
+                        symbolSize: 5,
+                        xAxisIndex: i,
+                        yAxisIndex: i,
+                    })
+                } else {
+                    series.push(s)
+                }
+            })
+             let option = {
+                 xAxis: xAxis,
+                 yAxis: yAxis,
+                 series: series,
+             };
             this.chart.setOption(option);
         }
     },
