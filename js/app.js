@@ -104,7 +104,7 @@ var vm = new Vue({
                     opacity: 1
                 },
                 throttleType: 'debounce',
-                throttleDelay: 1000,
+                throttleDelay: 2000,
             },
             visualMap: [
                 {
@@ -418,7 +418,7 @@ var vm = new Vue({
             let option = self.chart.getOption();
             let outputStr = "det_uid=[";
             for (var i=0; i< dataIndex.length; i++) {
-                let d = option.dataset[0].source[i];
+                let d = option.dataset[0].source[dataIndex[i]];
                 if (i != dataIndex.length-1)
                     outputStr += d[0] + ",";
                 else
