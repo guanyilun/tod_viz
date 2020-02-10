@@ -108,7 +108,7 @@
           <select v-model="p.x">
             <option v-for="key in Object.keys(metadata.variables)">{{key}}</option>
           </select>
-          <label>Plot {{i}} - x: </label>
+          <label>Plot {{i+1}} - x: </label>
         </div>
       </div>
       <div class="row">
@@ -116,7 +116,7 @@
           <select v-model="p.y">
             <option v-for="key in Object.keys(metadata.variables)">{{key}}</option>
           </select>
-          <label>Plot {{i}} - y: </label>
+          <label>Plot {{i+1}} - y: </label>
         </div>
         <div class="input-field col s1">
           <a class="waves-effect waves-teal btn-flat" v-on:click="updatePlots">Update Plots</a>

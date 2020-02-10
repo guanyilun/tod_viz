@@ -42,6 +42,8 @@ var vm = new Vue({
         vmin: 0.3,
         vmax: 2,
         todname: '1503213945.1503413441.ar4',
+        todList: [],
+        todIndex: 0,
         option: {
             title: {
                 text: 'TOD Visualizer',
@@ -86,6 +88,7 @@ var vm = new Vue({
                     return "ID: " + param.data[0] + "<br>"
                         + "Row: " + param.data[3] + "<br>"
                         + "Col: " + param.data[4] + "<br>"
+                        + "Pol-family: " + param.data[16] + "<br>"
                         + "Bias-line: " + param.data[17] + "<br>"
                         + "Optical-sign: " + param.data[18] + "<br>"
                 }
@@ -224,7 +227,7 @@ var vm = new Vue({
             let option = {
                 // first element is to ensure the first visual map remains unchanged
                 visualMap: [{},{
-                    dimension: this.vmap,
+                    dimensions: this.vmap,
                     text: [this.vmap],
                     min: parseFloat(this.vmin),
                     max: parseFloat(this.vmax),
@@ -233,19 +236,35 @@ var vm = new Vue({
             this.chart.setOption(option);
         },
         loadTOD () {
-            this.chart.showLoading()
+            //this.chart.showLoading();
             let self = this
             $.get("data/" + this.todname + ".json", (json) => {
                 let option = {
-                    dataset: json,
+                    dataset: {
+                        dimensions: self.option.dataset.dimensions,
+                        source: json.source
+                    },
                     title: {
                         subtext: "TOD: " + self.todname + "\nTag: " + json.tag,
                     }
                 }
-                self.fields = json.dimensions;
                 self.chart.setOption(option);
-                self.chart.hideLoading()
+                //self.chart.hideLoading();
             })
+        },
+        loadNextTod () {
+            if (this.todIndex != this.todList.length-1) {
+                this.todIndex += 1;
+                this.todname = this.todList[this.todIndex];
+                this.loadTOD();
+            }
+        },
+        loadPrevTod () {
+            if (this.todIndex != 0) {
+                this.todIndex -= 1;
+                this.todname = this.todList[this.todIndex];
+                this.loadTOD();
+            }
         },
         updateRanges () {
             let xAxis = [];
@@ -368,6 +387,30 @@ var vm = new Vue({
 
         // initialize echarts
         this.chart = echarts.init(document.getElementById('main'));
-        this.chart.setOption(this.option);
+        this.chart.showLoading()
+        // get metadata
+        let self = this
+        $.get("data/metadata.json", (json) => {
+            self.option.dataset = {
+                dimensions: json.dimensions,
+                source: null
+            };
+            self.todname = json.tod_list[0];
+            self.todList = json.tod_list;
+            // also load the first tod
+            $.get("data/" + self.todname + ".json", (json) => {
+                self.option.dataset.source = json.source;
+                self.option.title.subtext = "TOD: " + self.todname + "\nTag: " + json.tag
+                self.chart.setOption(self.option)
+                self.chart.hideLoading()
+            })
+        })
+        $(document).keyup(function(event) {
+			if (event.keyCode == 74) {
+				self.loadNextTod();
+			} else if (event.keyCode == 75) {
+				self.loadNextTod();
+			}
+		});
     }
 })
