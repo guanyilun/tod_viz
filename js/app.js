@@ -6,7 +6,7 @@ var vm = new Vue({
             // fields that can be used for visual mapping
             fields: ["det_uid", "array_x", "array_y", "row", "col", "MFELive",
                      "skewLive", "corrLive", "rmsLive", "gainLive", "DELive",
-                     "normLive", "kurtLive", "ff", "resp", "presel"],
+                     "normLive", "kurtLive", "ff", "resp", "presel", "sel"],
             // shortter name for plot display and use as look up table
             variables: {
                 MFE: 'MFELive',
@@ -219,6 +219,7 @@ var vm = new Vue({
                 {dim: 13, name: 'ff', realtime: false},
                 {dim: 14, name: 'resp', realtime: false, min: 1.3, max: 1.8},
                 {dim: 15, name: 'presel', realtime: false, type: 'category', data: [0, 1]},
+                {dim: 19, name: 'sel', realtime: false, type: 'category', data: [0, 1]},
             ],
         }
     },
@@ -236,7 +237,6 @@ var vm = new Vue({
             this.chart.setOption(option);
         },
         loadTOD () {
-            //this.chart.showLoading();
             let self = this
             $.get("data/" + this.todname + ".json", (json) => {
                 let option = {
@@ -249,7 +249,6 @@ var vm = new Vue({
                     }
                 }
                 self.chart.setOption(option);
-                //self.chart.hideLoading();
             })
         },
         loadNextTod () {
