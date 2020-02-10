@@ -102,7 +102,9 @@ var vm = new Vue({
                 yAxisIndex: [],
                 inBrush: {
                     opacity: 1
-                }
+                },
+                throttleType: 'debounce',
+                throttleDelay: 1000,
             },
             visualMap: [
                 {
@@ -162,7 +164,7 @@ var vm = new Vue({
                         x: 'row',
                         y: 'col'
                     },
-                    symbolSize: 7,
+                    symbolSize: 10,
                     xAxisIndex: 1,
                     yAxisIndex: 1,
                 },
@@ -407,6 +409,26 @@ var vm = new Vue({
                 self.chart.hideLoading()
             })
         })
+        // setup chart report when brush is used
+        this.chart.on('brushSelected', function (params) {
+            let brushComponent = params.batch[0];
+            // all of the plots are linked to the same dataset so
+            // i only need the first plot here
+            let dataIndex = brushComponent.selected[0].dataIndex;
+            let option = self.chart.getOption();
+            let outputStr = "det_uid=[";
+            for (var i=0; i< dataIndex.length; i++) {
+                let d = option.dataset[0].source[i];
+                if (i != dataIndex.length-1)
+                    outputStr += d[0] + ",";
+                else
+                    outputStr += d[0] + "]";
+            }
+            console.log(outputStr);
+        });
+
+
+        // setup keyboard short-cuts
         $(document).keyup(function(event) {
 			if (event.keyCode == 74) {
 				self.loadNextTod();
