@@ -408,7 +408,7 @@ var vm = new Vue({
 			if (event.keyCode == 74) {
 				self.loadNextTod();
 			} else if (event.keyCode == 75) {
-				self.loadNextTod();
+				self.loadPrevTod();
 			}
 		});
     }
