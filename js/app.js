@@ -416,18 +416,19 @@ var vm = new Vue({
             // i only need the first plot here
             let dataIndex = brushComponent.selected[0].dataIndex;
             let option = self.chart.getOption();
-            let outputStr = "det_uid=[";
+            let outputStr = ""
             for (var i=0; i< dataIndex.length; i++) {
                 let d = option.dataset[0].source[dataIndex[i]];
-                if (i != dataIndex.length-1)
+                if (i == 0) {
+                    outputStr += "det_uid=[" + d[0] + ",";
+                } else if (i != dataIndex.length-1) {
                     outputStr += d[0] + ",";
-                else
+                } else {
                     outputStr += d[0] + "]";
+                    console.log(outputStr);
+                }
             }
-            console.log(outputStr);
         });
-
-
         // setup keyboard short-cuts
         $(document).keyup(function(event) {
 			if (event.keyCode == 74) {
