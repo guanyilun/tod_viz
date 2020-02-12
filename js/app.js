@@ -274,28 +274,29 @@ var vm = new Vue({
             let xAxis = [];
             let yAxis = [];
             let parallelAxis = [];
+            let self = this;
             this.option.parallelAxis.forEach((p,i) => {
-                if (p.name in this.metadata.ranges) {
-                    p.min = this.metadata.ranges[p.name].min;
-                    p.max = this.metadata.ranges[p.name].max;
+                if (p.name in self.metadata.ranges) {
+                    p.min = self.metadata.ranges[p.name].min;
+                    p.max = self.metadata.ranges[p.name].max;
                     parallelAxis.push(p)
                 } else {
                     parallelAxis.push(p)
                 }
             })
             this.option.xAxis.forEach((a,i) => {
-                if (a.name in this.metadata.ranges) {
-                    a.min = this.metadata.ranges[a.name].min;
-                    a.max = this.metadata.ranges[a.name].max
+                if (a.name in self.metadata.ranges) {
+                    a.min = self.metadata.ranges[a.name].min;
+                    a.max = self.metadata.ranges[a.name].max
                     xAxis.push(a);
                 } else {
                     xAxis.push(a);
                 }
             })
             this.option.yAxis.forEach((a,i) => {
-                if (a.name in this.metadata.ranges) {
-                    a.min = this.metadata.ranges[a.name].min;
-                    a.max = this.metadata.ranges[a.name].max
+                if (a.name in self.metadata.ranges) {
+                    a.min = self.metadata.ranges[a.name].min;
+                    a.max = self.metadata.ranges[a.name].max
                     yAxis.push(a);
                 } else {
                     yAxis.push(a);
@@ -317,6 +318,7 @@ var vm = new Vue({
             let xAxis = [];
             let yAxis = [];
             let series = [];
+            let self = this;
             // update x axis
             this.option.xAxis.forEach((a,i) => {
                 // metadata.plots has an offset of 2
@@ -324,12 +326,12 @@ var vm = new Vue({
                     let ax = {
                         show: true,
                         gridIndex: i,
-                        name: this.metadata.plots[i-2].x
+                        name: self.metadata.plots[i-2].x
                     };
                     // add bounds if it is specified
-                    if (ax.name in this.metadata.ranges) {
-                        ax.min = this.metadata.ranges[ax.name].min;
-                        ax.max = this.metadata.ranges[ax.name].max;
+                    if (ax.name in self.metadata.ranges) {
+                        ax.min = self.metadata.ranges[ax.name].min;
+                        ax.max = self.metadata.ranges[ax.name].max;
                     }
                     xAxis.push(ax)
                 } else {
@@ -343,12 +345,12 @@ var vm = new Vue({
                     let ax = {
                         show: true,
                         gridIndex: i,
-                        name: this.metadata.plots[i-2].y
+                        name: self.metadata.plots[i-2].y
                     };
                     // add bounds if it is specified
-                    if (ax.name in this.metadata.ranges) {
-                        ax.min = this.metadata.ranges[ax.name].min;
-                        ax.max = this.metadata.ranges[ax.name].max;
+                    if (ax.name in self.metadata.ranges) {
+                        ax.min = self.metadata.ranges[ax.name].min;
+                        ax.max = self.metadata.ranges[ax.name].max;
                     }
                     yAxis.push(ax)
                 } else {
@@ -361,8 +363,8 @@ var vm = new Vue({
                     series.push({
                         type: 'scatter',
                         encode: {
-                            x: this.metadata.variables[this.metadata.plots[i-2].x],
-                            y: this.metadata.variables[this.metadata.plots[i-2].y],
+                            x: self.metadata.variables[self.metadata.plots[i-2].x],
+                            y: self.metadata.variables[self.metadata.plots[i-2].y],
                         },
                         symbolSize: 5,
                         xAxisIndex: i,
@@ -372,17 +374,20 @@ var vm = new Vue({
                     series.push(s)
                 }
             });
-            let option = {
-                xAxis: xAxis,
-                yAxis: yAxis,
-                series: series,
-             };
-            this.chart.setOption(option);
-            // update this.option to make sure other methods
-            // share the same options
             this.option.xAxis = xAxis;
             this.option.yAxis = yAxis;
             this.option.series = series;
+            // just use setOption sometimes doesn't update the axis
+            // i am forced to dispose the existing chart and recreate a new one
+            // this is also equivalent to this.chart.clear()
+            // this.chart.dispose();
+            // this.chart = echarts.init(document.getElementById('main'));
+            // this.chart.clear()
+            // update: found a better approach that is to set notMerge to true
+            // and replace the entire option object
+            this.chart.setOption(this.option, notMerge=true);
+            // update this.option to make sure other methods
+            // share the same options
         }
     },
     mounted() {
