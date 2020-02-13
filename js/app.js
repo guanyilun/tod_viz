@@ -256,19 +256,15 @@ var vm = new Vue({
                 self.chart.setOption(option);
             })
         },
-        loadNextTod () {
-            if (this.todIndex != this.todList.length-1) {
-                this.todIndex += 1;
-                this.todname = this.todList[this.todIndex];
-                this.loadTOD();
-            }
+        loadNextTod (i) {
+            this.todIndex = Math.min(this.todIndex + i, this.todList.length-1);
+            this.todname = this.todList[this.todIndex];
+            this.loadTOD();
         },
-        loadPrevTod () {
-            if (this.todIndex != 0) {
-                this.todIndex -= 1;
-                this.todname = this.todList[this.todIndex];
-                this.loadTOD();
-            }
+        loadPrevTod (i) {
+            this.todIndex = Math.max(this.todIndex - i, 0);
+            this.todname = this.todList[this.todIndex];
+            this.loadTOD();
         },
         updateRanges () {
             let xAxis = [];
@@ -436,11 +432,13 @@ var vm = new Vue({
         });
         // setup keyboard short-cuts
         $(document).keyup(function(event) {
-			if (event.keyCode == 74) {
-				self.loadNextTod();
-			} else if (event.keyCode == 75) {
-				self.loadPrevTod();
-			}
-		});
+	    if (event.keyCode == 74) {
+                if (event.shiftKey) self.loadNextTod(10);
+                else self.loadNextTod(1);
+	    } else if (event.keyCode == 75) {
+                if (event.shiftKey) self.loadPrevTod(10);
+                else self.loadPrevTod(1);
+	    }
+	});
     }
 })
