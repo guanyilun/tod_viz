@@ -35,10 +35,10 @@ var vm = new Vue({
             },
             // plot axis definition
             plots: [
-                {gridIndex: 2, x: 'rms', y: 'gain'},
-                {gridIndex: 3, x: 'rms', y: 'ff'},
-                {gridIndex: 4, x: 'skew', y: 'MFE'},
-                {gridIndex: 5, x: 'corr', y: 'gain'}
+                {gridIndex: 2, x: 'gain', y: 'resp'},
+                {gridIndex: 3, x: 'gain', y: 'ff'},
+                {gridIndex: 4, x: 'gain', y: 'norm'},
+                {gridIndex: 5, x: 'gain', y: 'corr'}
             ],
         },
         vmap: "gainLive",
@@ -73,18 +73,18 @@ var vm = new Vue({
             xAxis: [
                 {show: false, gridIndex: 0},
                 {show: false, gridIndex: 1, name: 'col'},
-                {show: true, gridIndex: 2, name: 'rms', min: 0, max: 6},
-                {show: true, gridIndex: 3, name: 'rms', min: 0, max: 6},
-                {show: true, gridIndex: 4, name: 'skew', min:-4, max:4},
-                {show: true, gridIndex: 5, name: 'corr', min:0.95, max:1},
+                {show: true, gridIndex: 2, name: 'gain', min: 0, max: 2},
+                {show: true, gridIndex: 3, name: 'gain', min: 0, max: 2},
+                {show: true, gridIndex: 4, name: 'gain', min: 0, max: 2},
+                {show: true, gridIndex: 5, name: 'gain', min: 0, max: 2},
             ],
             yAxis: [
                 {show: false, gridIndex: 0},
                 {show: false, gridIndex: 1, name: 'row'},
-                {show: true, gridIndex: 2, name: 'gain'},
+                {show: true, gridIndex: 2, name: 'resp', min:1.3, max:1.8},
                 {show: true, gridIndex: 3, name: 'ff'},
-                {show: true, gridIndex: 4, name: 'MFE', min:2, max:20},
-                {show: true, gridIndex: 5, name: 'gain'},
+                {show: true, gridIndex: 4, name: 'norm', min:0, max:10000},
+                {show: true, gridIndex: 5, name: 'corr', min:0.95, max:1},
             ],
             tooltip: {
                 formatter: (param) => {
@@ -128,7 +128,6 @@ var vm = new Vue({
                         },
                         color: '#ffffff',
                     },
-                    //seriesIndex: [0,1],
                 },
                 {
                     type: 'continuous',
@@ -139,7 +138,7 @@ var vm = new Vue({
                     inRange: {
                         color: ['#313695', '#4575b4', '#74add1', '#abd9e9', '#e0f3f8', '#ffffbf', '#fee090', '#fdae61', '#f46d43', '#d73027', '#a50026']
                     },
-                    text: ['gainLive'],           // 文本，默认为数值文本
+                    text: ['gainLive'],
                     calculable: true,
                     dimension: 'gainLive',
                     precision: 2,
@@ -171,8 +170,8 @@ var vm = new Vue({
                 {
                     type: 'scatter',
                     encode: {
-                        x: 'rmsLive',
-                        y: 'gainLive'
+                        x: 'gainLive',
+                        y: 'resp'
                     },
                     symbolSize: 5,
                     xAxisIndex: 2,
@@ -181,7 +180,7 @@ var vm = new Vue({
                 {
                     type: 'scatter',
                     encode: {
-                        x: 'rmsLive',
+                        x: 'gainLive',
                         y: 'ff'
                     },
                     symbolSize: 5,
@@ -191,8 +190,8 @@ var vm = new Vue({
                 {
                     type: 'scatter',
                     encode: {
-                        x: 'skewLive',
-                        y: 'MFELive'
+                        x: 'gainLive',
+                        y: 'normLive'
                     },
                     symbolSize: 5,
                     xAxisIndex: 4,
@@ -201,8 +200,8 @@ var vm = new Vue({
                 {
                     type: 'scatter',
                     encode: {
-                        x: 'corrLive',
-                        y: 'gainLive'
+                        x: 'gainLive',
+                        y: 'corrLive'
                     },
                     symbolSize: 5,
                     xAxisIndex: 5,
