@@ -72,7 +72,7 @@ var vm = new Vue({
             // define plot axes: cannot omit these definitions here
             xAxis: [
                 {show: false, gridIndex: 0},
-                {show: false, gridIndex: 1, name: 'row'},
+                {show: false, gridIndex: 1, name: 'col'},
                 {show: true, gridIndex: 2, name: 'rms', min: 0, max: 6},
                 {show: true, gridIndex: 3, name: 'rms', min: 0, max: 6},
                 {show: true, gridIndex: 4, name: 'skew', min:-4, max:4},
@@ -80,7 +80,7 @@ var vm = new Vue({
             ],
             yAxis: [
                 {show: false, gridIndex: 0},
-                {show: false, gridIndex: 1, name: 'col'},
+                {show: false, gridIndex: 1, name: 'row'},
                 {show: true, gridIndex: 2, name: 'gain'},
                 {show: true, gridIndex: 3, name: 'ff'},
                 {show: true, gridIndex: 4, name: 'MFE', min:2, max:20},
@@ -161,8 +161,8 @@ var vm = new Vue({
                 {
                     type: 'scatter',
                     encode: {
-                        x: 'row',
-                        y: 'col'
+                        x: 'col',
+                        y: 'row'
                     },
                     symbolSize: 10,
                     xAxisIndex: 1,
