@@ -370,9 +370,10 @@ var vm = new Vue({
                     series.push(s)
                 }
             });
-            this.option.xAxis = xAxis;
-            this.option.yAxis = yAxis;
-            this.option.series = series;
+            let option = this.chart.getOption()
+            option.xAxis = xAxis;
+            option.yAxis = yAxis;
+            option.series = series;
             // just use setOption sometimes doesn't update the axis
             // i am forced to dispose the existing chart and recreate a new one
             // this is also equivalent to this.chart.clear()
@@ -381,9 +382,12 @@ var vm = new Vue({
             // this.chart.clear()
             // update: found a better approach that is to set notMerge to true
             // and replace the entire option object
-            this.chart.setOption(this.option, notMerge=true);
+            this.chart.setOption(option, notMerge=true);
             // update this.option to make sure other methods
             // share the same options
+            this.option.xAxis = xAxis;
+            this.option.yAxis = yAxis;
+            this.option.series = series;
         }
     },
     mounted() {
