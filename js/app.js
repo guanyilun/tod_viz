@@ -232,7 +232,7 @@ var vm = new Vue({
             let option = {
                 // first element is to ensure the first visual map remains unchanged
                 visualMap: [{},{
-                    dimensions: this.vmap,
+                    dimension: this.vmap,
                     text: [this.vmap],
                     min: parseFloat(this.vmin),
                     max: parseFloat(this.vmax),
